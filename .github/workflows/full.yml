@@ -22,7 +22,14 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      # step 2: GitVersion
+      # step 2: Auth with Azure
+      - name: Azure Login
+        uses: Azure/login@v1.4.6
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      # step 3: GitVersion
       - name: 2. Install GitVersion
         uses: gittools/actions/gitversion/setup@v0
         with:
@@ -34,7 +41,7 @@ jobs:
           useConfigFile: true
           configFilePath: ./gitversion.yml
           
-       # step 3: Replace tokens
+       # step 4: Replace tokens
       - name: Replace tokens
         # You may pin to the exact commit or the version.
         # uses: cschleiden/replace-tokens@8e091844c27eb36853efbfade5ffca07260f0250
@@ -42,11 +49,11 @@ jobs:
         with:
           files: parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam
 
-       # step 4: what if deploy stage
+       # step 5: what if deploy stage
       - name: What If Template deploy validation
         run: |
           az deployment group what-if --template-file ./templates/${{ env.TEMPLATE_FILE }}.bicep --parameters ./parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
        
-       # step 5: copy templates
-       # step 6: copy parameters
+       # step 6: copy templates
+       # step 7: copy parameters
        
