@@ -12,6 +12,9 @@ env:
   LOCATION: 'we'
   RESOURCE_GROUP: 'Test-Lab'
 
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   validate:
