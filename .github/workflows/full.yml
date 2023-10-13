@@ -31,7 +31,7 @@ jobs:
         uses: gittools/actions/gitversion/execute@v0
         with:
           useConfigFile: true
-          configFilePath: gitversion.yml
+          configFilePath: ./gitversion.yml
           
        # step 3: Replace tokens
       - name: Replace tokens
