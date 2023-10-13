@@ -1,4 +1,4 @@
-using '../../templates/main.bicep'
+using './templates/main.bicep'
 
 param purpose = 'shared'
 param location = 'westeurope'
