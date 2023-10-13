@@ -20,7 +20,8 @@ jobs:
       # step 1: checkout
       - name: 1. Checkout 
         uses: actions/checkout@v3
-
+        with:
+          fetch-depth: 0
       # step 2: GitVersion
       - name: 2. Install GitVersion
         uses: gittools/actions/gitversion/setup@v0
