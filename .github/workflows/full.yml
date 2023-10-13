@@ -45,7 +45,7 @@ jobs:
        # step 4: what if deploy stage
       - name: What If Template deploy validation
         run: |
-          az deployment group what-if --template-file .\templates\${{ env.TEMPLATE_FILE }}.bicep --parameters .\parameters\${{ env.ENVIRONMENT }}\${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
+          az deployment group what-if --template-file ./templates/${{ env.TEMPLATE_FILE }}.bicep --parameters ./parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
        
        # step 5: copy templates
        # step 6: copy parameters
