@@ -7,10 +7,11 @@ on:
   workflow_dispatch:
 
 env:
-  ENVIRONMENT: ''
+  ENVIRONMENT: 'int'
   TEMPLATE_FILE: 'main'
-  LOCATION: ''
-  RESOURCE_GROUP: ''
+  LOCATION: 'we'
+  RESOURCE_GROUP: 'Test-Lab'
+
 
 jobs:
   validate:
