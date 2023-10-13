@@ -18,6 +18,7 @@ permissions:
 
 jobs:
   validate:
+    environment: int
     runs-on: ubuntu-latest
     steps:
       # step 1: checkout
