@@ -1,0 +1,40 @@
+name: Validate & Deploy
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      # step 1: checkout
+      - name: 1. Checkout 
+      - uses: actions/checkout@v3
+
+      # step 2: GitVersion
+      - name: 2. Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0
+        with:
+          versionSpec: '5.x'
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0
+        with:
+          useConfigFile: true
+          configFilePath: gitversion.yml
+
+
+       # step 3: Replace tokens
+       # step 4: what if deploy stage
+       # step 5: copy templates
+       # step 6: copy parameters
+       
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
