@@ -59,5 +59,20 @@ jobs:
           az deployment group what-if --template-file ./templates/${{ env.TEMPLATE_FILE }}.bicep --parameters ./parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
        
        # step 6: copy templates
+      - name: Copy templates
+        run: |
+          mkdir -p ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates
+          cp ./templates/${{ env.TEMPLATE_FILE }}.bicep ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates
+            
        # step 7: copy parameters
-       
+      - name: Copy parameters
+        run: |
+          mkdir -p ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters
+          cp ./parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters
+
+        # step 8: publish the artifact
+      - name: Publish artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact_${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
+          path: ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
