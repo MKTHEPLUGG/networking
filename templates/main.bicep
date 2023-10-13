@@ -7,7 +7,7 @@ param time string = utcNow()
 param gitRef string
 param gitRepo string
 
-module myNetwork 'br:eruza123.azurecr.io/bicep/modules/network:v0.1.9' = {
+module myNetwork 'br:eruza123.azurecr.io/bicep/modules/network:v0.1.32' = {
   name: 'networkDeploy-${time}'
   params: {
     environment: environment
