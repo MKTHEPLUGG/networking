@@ -1,0 +1,27 @@
+trigger:
+- master
+
+# specify a branch that needs to have a pull request created for the pipeline to run, good for validation before adding to master branch
+#pr: dev/agents
+
+
+
+pool:
+  name: AzVMSS_agent_pool
+#  vmImage: ubuntu-latest
+
+resources:
+  repositories:
+  - repository: pipelineTemplates
+    type: git
+    name: pipelineTemplates
+
+stages:
+- template: azure/full.yml@pipelineTemplates
+  parameters:
+    templateFile: 'main'
+    azureSubscription: 'CICD-MI'
+    environment: 'int'
+    location: 'we'
+    resourceGroup: 'Test-Lab'
+    
