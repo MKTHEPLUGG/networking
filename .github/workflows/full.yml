@@ -78,19 +78,30 @@ jobs:
           name: artifact_${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
           path: ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
 
-    # Deploy Stage
-       # step 1: Checkout
-      - name: 1. Checkout 
-        uses: actions/checkout@v3
+      - name: Download artifact
+        uses: actions/download-artifact@v3
         with:
-          fetch-depth: 0
-      - name: Deploy ${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
+          name: artifact_${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
+          path: ./artifact
+
+      - name: Deploy using the artifact
         run: |
-          pwd
-          ls $GITHUB_WORKSPACE
-          echo "$GITHUB_WORKSPACE"
-          ls -al ./templates/main.bicep
-          ls -al ./parameters/int/main_we.bicepparam
-          ls -al /home/runner/work/networking/networking/artifact/main_int_we/templates
-          ls -al /home/runner/work/networking/networking/artifact/main_int_we/parameters
-#          az deployment group create --template-file  $GITHUB_WORKSPACE/templates/${{ env.TEMPLATE_FILE }}.bicep --parameters $GITHUB_WORKSPACE/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
+          az deployment group create --template-file ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates/${{ env.TEMPLATE_FILE }}.bicep --parameters ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
+
+
+#     # Deploy Stage
+#        # step 1: Checkout
+#       - name: 1. Checkout 
+#         uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 0
+#       - name: Deploy ${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
+#         run: |
+#           pwd
+#           ls $GITHUB_WORKSPACE
+#           echo "$GITHUB_WORKSPACE"
+#           ls -al ./templates/main.bicep
+#           ls -al ./parameters/int/main_we.bicepparam
+#           ls -al /home/runner/work/networking/networking/artifact/main_int_we/templates
+#           ls -al /home/runner/work/networking/networking/artifact/main_int_we/parameters
+# #          az deployment group create --template-file  $GITHUB_WORKSPACE/templates/${{ env.TEMPLATE_FILE }}.bicep --parameters $GITHUB_WORKSPACE/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
