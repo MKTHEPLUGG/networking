@@ -80,11 +80,16 @@ jobs:
         with:
           name: artifact_${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
           path: ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
-       # step 1: Checkout
-      - name: 1. Checkout 
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      #  # step 1: Checkout
+      # - name: 1. Checkout 
+      #   uses: actions/checkout@v3
+      #   with:
+      #     fetch-depth: 0
+
+      - name: List contents after upload
+        run: |
+          ls -R ${{ github.workspace }}/artifact/
+
 
       - name: Adjust using directive in parameters file
         run: |
