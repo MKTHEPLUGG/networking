@@ -24,7 +24,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     - name: Tag the repo
-      uses: ./.github/actions/gvtag
+      uses: ./.github/actions/bicep-network-deploy
     - name: Deploy using Bicep
       uses: ./.github/actions/bicep-network-deploy
       with:
