@@ -21,6 +21,7 @@ jobs:
     environment: int
     runs-on: ubuntu-latest
     steps:
+    # Validation stage:
       # step 1: checkout
       - name: 1. Checkout 
         uses: actions/checkout@v3
@@ -59,20 +60,31 @@ jobs:
           az deployment group what-if --template-file ./templates/${{ env.TEMPLATE_FILE }}.bicep --parameters ./parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
        
        # step 6: copy templates
-      - name: Copy templates
+      - name: copy /templates/${{ env.TEMPLATE_FILE }}.bicep
         run: |
           mkdir -p ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates
           cp ./templates/${{ env.TEMPLATE_FILE }}.bicep ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates
             
        # step 7: copy parameters
-      - name: Copy parameters
+      - name: Copy /parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam
         run: |
           mkdir -p ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters
           cp ./parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters
 
-        # step 8: publish the artifact
+       # step 8: publish the artifact
       - name: Publish artifacts
         uses: actions/upload-artifact@v3
         with:
           name: artifact_${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
           path: ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
+          
+    # Deploy Stage
+       # step 1: Checkout
+      - name: 1. Checkout 
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Deploy ${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
+        run: |
+          ls -al
+          az deployment group create --template-file  $GITHUB_WORKSPACE/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates/${{ env.TEMPLATE_FILE }}.bicep --parameters $GITHUB_WORKSPACE/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
