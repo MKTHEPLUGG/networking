@@ -63,13 +63,16 @@ jobs:
       - name: copy /templates/${{ env.TEMPLATE_FILE }}.bicep
         run: |
           mkdir -p ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates
+          ls -R ./templates # For debugging: List files in the templates directory
           cp ./templates/${{ env.TEMPLATE_FILE }}.bicep ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates
-            
+          ls -R ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates
        # step 7: copy parameters
       - name: Copy /parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam
         run: |
           mkdir -p ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters
+          ls -R ./parameters/${{ env.ENVIRONMENT }} # For debugging: List files in the parameters directory
           cp ./parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters
+          ls -R ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters
 
        # step 8: publish the artifact
       - name: Publish artifacts
