@@ -31,7 +31,6 @@ permissions:
   contents: read
 runs:
   using: 'composite'
-  environment: int
   steps:
     - name: Checkout 
       uses: actions/checkout@v3
