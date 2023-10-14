@@ -1,0 +1,34 @@
+name: Validate & Deploy
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+env:
+  ENVIRONMENT: 'int'
+  TEMPLATE_FILE: 'main'
+  LOCATION: 'we'
+  RESOURCE_GROUP: 'Test-Lab'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  validate:
+    environment: int
+    runs-on: ubuntu-latest
+    steps:
+    # Deploy Stage
+       # step 1: Checkout
+      - name: 1. Checkout 
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Deploy ${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
+        run: |
+          ls $GITHUB_WORKSPACE
+          echo $GITHUB_WORKSPACE
+          az deployment group create --template-file  $GITHUB_WORKSPACE/templates/${{ env.TEMPLATE_FILE }}.bicep --parameters $GITHUB_WORKSPACE/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
