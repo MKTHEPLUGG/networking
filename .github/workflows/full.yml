@@ -86,5 +86,5 @@ jobs:
           fetch-depth: 0
       - name: Deploy ${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
         run: |
-          ls $GITHUB_WORKSPACE/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates/${{ env.TEMPLATE_FILE }}.bicep --parameters $GITHUB_WORKSPACE/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam
+          ls $GITHUB_WORKSPACE
           az deployment group create --template-file  $GITHUB_WORKSPACE/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates/${{ env.TEMPLATE_FILE }}.bicep --parameters $GITHUB_WORKSPACE/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
