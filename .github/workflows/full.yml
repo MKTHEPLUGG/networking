@@ -94,16 +94,16 @@ jobs:
       - name: Adjust using directive in parameters file
         run: |
           ls -R ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
-          sed -i 's|../../templates/main.bicep|./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates/${{ env.TEMPLATE_FILE }}.bicep|' ./parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam
+          sed -i 's|../../templates/main.bicep|./artifact/main_int_we/templates/main.bicep|' ./artifact/main_int_we/parameters/main_we.bicepparam
           cat ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam
 
       # - name: List contents of artifact directory
       #   run: |
       #     ls -R ./artifact/
 
-      # - name: Deploy using the artifact
-      #   run: |
-      #     az deployment group create --template-file ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates/${{ env.TEMPLATE_FILE }}.bicep --parameters ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
+      - name: Deploy using the artifact
+        run: |
+          az deployment group create --template-file ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates/${{ env.TEMPLATE_FILE }}.bicep --parameters ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
 
 
 #     # Deploy Stage
