@@ -1,4 +1,4 @@
-name: from-action
+name: Validate & Deploy
 on:
   push:
     branches: [ "master" ]
