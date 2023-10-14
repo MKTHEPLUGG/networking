@@ -54,10 +54,10 @@ jobs:
         with:
           files: parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam
 
-       # step 5: what if deploy stage
-      - name: What If Template deploy validation
-        run: |
-          az deployment group what-if --template-file ./templates/${{ env.TEMPLATE_FILE }}.bicep --parameters ./parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
+      #  # step 5: what if deploy stage
+      # - name: What If Template deploy validation
+      #   run: |
+      #     az deployment group what-if --template-file ./templates/${{ env.TEMPLATE_FILE }}.bicep --parameters ./parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
        
        # step 6: copy templates
       - name: copy /templates/${{ env.TEMPLATE_FILE }}.bicep
@@ -85,16 +85,17 @@ jobs:
 
       - name: Adjust using directive in parameters file
         run: |
+          ls -R ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
           sed -i 's|../../templates/main.bicep|./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates/${{ env.TEMPLATE_FILE }}.bicep|' ./parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam
           cat ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam
 
-      - name: List contents of artifact directory
-        run: |
-          ls -R ./artifact/
+      # - name: List contents of artifact directory
+      #   run: |
+      #     ls -R ./artifact/
 
-      - name: Deploy using the artifact
-        run: |
-          az deployment group create --template-file ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates/${{ env.TEMPLATE_FILE }}.bicep --parameters ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
+      # - name: Deploy using the artifact
+      #   run: |
+      #     az deployment group create --template-file ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates/${{ env.TEMPLATE_FILE }}.bicep --parameters ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
 
 
 #     # Deploy Stage
