@@ -94,7 +94,7 @@ jobs:
       - name: Adjust using directive in parameters file
         run: |
           ls -R ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
-          sed -i 's|../../templates/main.bicep|./artifact/main_int_we/templates/main.bicep|' ./artifact/main_int_we/parameters/main_we.bicepparam
+          sed -i 's|../../templates/main.bicep|${{ github.workspace }}/artifact/main_int_we/templates/main.bicep|' ./artifact/main_int_we/parameters/main_we.bicepparam
           cat ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam
 
       # - name: List contents of artifact directory
