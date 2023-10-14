@@ -77,17 +77,20 @@ jobs:
         with:
           name: artifact_${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
           path: ${{ github.workspace }}/artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
-
-      - name: Download artifact
-        uses: actions/download-artifact@v3
+       # step 1: Checkout
+      - name: 1. Checkout 
+        uses: actions/checkout@v3
         with:
-          name: artifact_${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
-          path: ./artifact
+          fetch-depth: 0
 
       - name: Adjust using directive in parameters file
         run: |
           sed -i 's|../../templates/main.bicep|./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates/${{ env.TEMPLATE_FILE }}.bicep|' ./parameters/${{ env.ENVIRONMENT }}/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam
+          cat ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam
 
+      - name: List contents of artifact directory
+        run: |
+          ls -R ./artifact/
 
       - name: Deploy using the artifact
         run: |
