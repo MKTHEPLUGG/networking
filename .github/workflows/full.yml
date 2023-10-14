@@ -89,6 +89,8 @@ jobs:
           ls $GITHUB_WORKSPACE
           echo $GITHUB_WORKSPACE
           echo "$GITHUB_WORKSPACE"
+          ls -al ./templates/main.bicep
+          ls -al ./parameters/int/main_we.bicepparam
           ls -al /home/runner/work/networking/networking/artifact/main_int_we/templates
           ls -al /home/runner/work/networking/networking/artifact/main_int_we/parameters
 #          az deployment group create --template-file  $GITHUB_WORKSPACE/templates/${{ env.TEMPLATE_FILE }}.bicep --parameters $GITHUB_WORKSPACE/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
