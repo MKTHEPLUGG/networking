@@ -25,13 +25,13 @@ jobs:
       uses: actions/checkout@v3
     - name: Tag the repo
       uses: ./.github/actions/bicep-network-deploy
-    - name: Deploy using Bicep
-      uses: ./.github/actions/bicep-network-deploy
-      with:
-        azureClientId: ${{ secrets.AZURE_CLIENT_ID }}
-        azureTenantId: ${{ secrets.AZURE_TENANT_ID }}
-        azureSubscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        environment: 'int'
-        templateFile: 'main'
-        location: 'we'
-        resourceGroup: 'Test-Lab'
+    # - name: Deploy using Bicep
+    #   uses: ./.github/actions/bicep-network-deploy
+    #   with:
+    #     azureClientId: ${{ secrets.AZURE_CLIENT_ID }}
+    #     azureTenantId: ${{ secrets.AZURE_TENANT_ID }}
+    #     azureSubscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    #     environment: 'int'
+    #     templateFile: 'main'
+    #     location: 'we'
+    #     resourceGroup: 'Test-Lab'
