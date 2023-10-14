@@ -26,6 +26,9 @@ inputs:
   resourceGroup:
     description: 'Azure Resource Group for deployment'
     required: true
+permissions:
+  id-token: write
+  contents: read
 runs:
   using: 'composite'
   steps:
