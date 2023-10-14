@@ -52,6 +52,14 @@ runs:
       with:
         useConfigFile: true
         configFilePath: ./gitversion.yml
+    - name: tag the repo
+      if: ${{ github.ref == 'refs/heads/main' }}
+      shell: bash
+      run: |
+        echo "SemVer: ${{ steps.gitversion.outputs.semVer }}"
+        echo ${{ env.semVer }}
+        git tag ${{ steps.gitversion.outputs.semVer }}
+        git push origin ${{ steps.gitversion.outputs.semVer }}
     - name: Replace tokens
       uses: cschleiden/replace-tokens@v1.2
       with:
