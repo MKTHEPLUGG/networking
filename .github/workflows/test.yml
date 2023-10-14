@@ -1,5 +1,4 @@
-name: Validate & Deploy
-on:
+name: Test
   push:
     branches: [ "master" ]
   pull_request:
