@@ -101,9 +101,23 @@ jobs:
       #   run: |
       #     ls -R ./artifact/
 
+      - name: Adjust using directive in parameters file
+        run: |
+          # Move the files to the current directory
+          cp ./artifact/main_int_we/templates/main.bicep .
+          cp ./artifact/main_int_we/parameters/main_we.bicepparam .
+          # Update the reference in the parameter file
+          sed -i 's|/home/runner/work/networking/networking/artifact/main_int_we/templates/main.bicep|main.bicep|' main_we.bicepparam
+
       - name: Deploy using the artifact
         run: |
-          az deployment group create --template-file ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates/${{ env.TEMPLATE_FILE }}.bicep --parameters ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
+          az deployment group create --template-file ./main.bicep --parameters ./main_we.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
+
+
+
+      # - name: Deploy using the artifact
+      #   run: |
+      #     az deployment group create --template-file ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/templates/${{ env.TEMPLATE_FILE }}.bicep --parameters ./artifact/${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}/parameters/${{ env.TEMPLATE_FILE }}_${{ env.LOCATION }}.bicepparam --resource-group ${{ env.RESOURCE_GROUP }}
 
 
 #     # Deploy Stage
