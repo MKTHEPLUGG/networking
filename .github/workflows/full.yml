@@ -86,8 +86,8 @@ jobs:
           fetch-depth: 0
       - name: Deploy ${{ env.TEMPLATE_FILE }}_${{ env.ENVIRONMENT }}_${{ env.LOCATION }}
         run: |
+          pwd
           ls $GITHUB_WORKSPACE
-          echo $GITHUB_WORKSPACE
           echo "$GITHUB_WORKSPACE"
           ls -al ./templates/main.bicep
           ls -al ./parameters/int/main_we.bicepparam
