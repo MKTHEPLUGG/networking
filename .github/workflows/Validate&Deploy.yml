@@ -34,3 +34,20 @@ jobs:
         templateFile: 'main'
         location: 'we'
         resourceGroup: 'Test-Lab'
+
+    - name: Set Subnet ID as GitHub Secret
+      run: |
+        # Extract subnet ID from deployment (this depends on your deployment command)
+        SUBNET_ID="<extracted_subnet_id>"
+
+        # GitHub API Endpoint to create/update a repository secret | we are setting the subnetID we got in this module as a var for remote repo VM
+        API_ENDPOINT="https://api.github.com/repos/MKTHEPLUGG/vm/actions/secrets/SUBNET_ID"
+
+        # Call GitHub API to set the secret
+        curl -X PUT $API_ENDPOINT \
+          -H "Authorization: token ${{ secrets.GH_API_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          -d '{"encrypted_value":"'$(echo -n $SUBNET_ID | openssl rsautl -encrypt -oaep -pubin -inkey <(curl -s $API_ENDPOINT/public-key | jq -r .key) | base64)'", "key_id":"'$(curl -s $API_ENDPOINT/public-key | jq -r .key_id)'"}'
+      env:
+        GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
+
