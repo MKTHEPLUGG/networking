@@ -35,7 +35,6 @@ jobs:
         location: 'we'
         resourceGroup: 'Test-Lab'
 
-
     - name: Set Subnet ID as GitHub Secret
       run: |
         # Extract subnet ID from deployment (this depends on your deployment command)
@@ -50,8 +49,15 @@ jobs:
         PUBLIC_KEY=$(echo $RESPONSE_JSON | jq -r .key)
         KEY_ID=$(echo $RESPONSE_JSON | jq -r .key_id)
 
+        # Save public key to a temporary file
+        TMP_PUBLIC_KEY_FILE=$(mktemp)
+        echo "$PUBLIC_KEY" | base64 --decode > $TMP_PUBLIC_KEY_FILE
+
         # Encrypt the SUBNET_ID using the fetched public key
-        ENCRYPTED_VALUE=$(echo -n "$SUBNET_ID" | openssl pkeyutl -encrypt -pubin -inkey <(echo "$PUBLIC_KEY" | base64 --decode) -pkeyopt rsa_padding_mode:oaep | base64 | tr -d '\n')
+        ENCRYPTED_VALUE=$(echo -n "$SUBNET_ID" | openssl pkeyutl -encrypt -pubin -inkey $TMP_PUBLIC_KEY_FILE -pkeyopt rsa_padding_mode:oaep | base64 | tr -d '\n')
+
+        # Clean up the temporary public key file
+        rm -f $TMP_PUBLIC_KEY_FILE
 
         # Call GitHub API to set the secret
         curl -X PUT $API_ENDPOINT \
