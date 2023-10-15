@@ -14,11 +14,6 @@ The custom module and workflow have been designed to deploy a network and Networ
 
 This action deploys a network and NSG in Azure using a custom Bicep module.
 
-### Properties:
-
-- **Author**: Michiel Van Haegenborgh
-- **Icon**: Cloud-upload
-- **Color**: Blue
 
 ### Inputs:
 
