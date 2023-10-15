@@ -37,7 +37,7 @@ jobs:
 
     - name: Set Subnet ID as GitHub Secret
       run: |
-        apt install jg -y
+        # apt install jg -y
         # Extract subnet ID from deployment (this depends on your deployment command)
         SUBNET_ID="<extracted_subnet_id>"
 
