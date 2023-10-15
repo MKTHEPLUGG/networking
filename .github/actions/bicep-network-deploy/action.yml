@@ -53,7 +53,7 @@ runs:
         useConfigFile: true
         configFilePath: ./gitversion.yml
     - name: tag the repo
-      if: ${{ github.ref == 'refs/heads/main' }}
+      if: ${{ github.ref == 'refs/heads/master' }}
       shell: bash
       run: |
         echo "SemVer: ${{ steps.gitversion.outputs.semVer }}"
