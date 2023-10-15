@@ -52,6 +52,7 @@ jobs:
         # Save public key to a temporary file
         TMP_PUBLIC_KEY_FILE=$(mktemp)
         echo "$PUBLIC_KEY" | base64 --decode > $TMP_PUBLIC_KEY_FILE
+        cat $TMP_PUBLIC_KEY_FILE
 
         # Encrypt the SUBNET_ID using the fetched public key
         ENCRYPTED_VALUE=$(echo -n "$SUBNET_ID" | openssl pkeyutl -encrypt -pubin -inkey $TMP_PUBLIC_KEY_FILE -pkeyopt rsa_padding_mode:oaep | base64 | tr -d '\n')
