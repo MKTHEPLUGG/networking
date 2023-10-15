@@ -35,31 +35,52 @@ jobs:
         location: 'we'
         resourceGroup: 'Test-Lab'
 
+    - name: Install libsodium (Ubuntu)
+      run: sudo apt-get update && sudo apt-get install -y libsodium23
+
+
     - name: Set Subnet ID as GitHub Secret
       run: |
-        # apt install jg -y
+        # apt install libsodium23 -y
         # Extract subnet ID from deployment (this depends on your deployment command)
         SUBNET_ID="<extracted_subnet_id>"
 
-        # GitHub API Endpoint to create/update a repository secret | we are setting the subnetID we got in this module as a var for remote repo VM
+        # Make sure we have a value for SUBNET_ID
+        if [ -z "$SUBNET_ID" ]; then
+            echo "Error: SUBNET_ID is empty. Exiting."
+            exit 1
+        fi
+
+        # GitHub API Endpoint to create/update a repository secret
         API_ENDPOINT="https://api.github.com/repos/MKTHEPLUGG/vm/actions/secrets/SUBNET_ID"
         PUBLIC_KEY_ENDPOINT="${API_ENDPOINT}/public-key"
 
         # Fetch the public key and key_id for encryption
         RESPONSE_JSON=$(curl -s -H "Authorization: token ${{ secrets.GH_API_TOKEN }}" $PUBLIC_KEY_ENDPOINT)
+
+        # Error checking for the curl request
+        if [ -z "$RESPONSE_JSON" ]; then
+            echo "Error: Failed to fetch the public key. Exiting."
+            exit 1
+        fi
+
         PUBLIC_KEY=$(echo $RESPONSE_JSON | jq -r .key)
         KEY_ID=$(echo $RESPONSE_JSON | jq -r .key_id)
 
-        # Save public key to a temporary file
-        TMP_PUBLIC_KEY_FILE=$(mktemp)
-        echo "$PUBLIC_KEY" | base64 --decode > $TMP_PUBLIC_KEY_FILE
-        cat $TMP_PUBLIC_KEY_FILE
+        # Make sure we have a value for PUBLIC_KEY and KEY_ID
+        if [ -z "$PUBLIC_KEY" ] || [ -z "$KEY_ID" ]; then
+            echo "Error: Failed to extract the public key or key ID. Exiting."
+            exit 1
+        fi
 
-        # Encrypt the SUBNET_ID using the fetched public key
-        ENCRYPTED_VALUE=$(echo -n "$SUBNET_ID" | openssl pkeyutl -encrypt -pubin -inkey $TMP_PUBLIC_KEY_FILE -pkeyopt rsa_padding_mode:oaep | base64 | tr -d '\n')
+        # Encrypt the SUBNET_ID using the fetched public key with sodium
+        ENCRYPTED_VALUE=$(echo -n "$SUBNET_ID" | sodium crypto_box_seal --pk $PUBLIC_KEY | base64 | tr -d '\n')
 
-        # Clean up the temporary public key file
-        rm -f $TMP_PUBLIC_KEY_FILE
+        # Make sure we have an encrypted value
+        if [ -z "$ENCRYPTED_VALUE" ]; then
+            echo "Error: Encryption failed. Exiting."
+            exit 1
+        fi
 
         # Call GitHub API to set the secret
         curl -X PUT $API_ENDPOINT \
@@ -68,3 +89,36 @@ jobs:
           -d '{"encrypted_value":"'${ENCRYPTED_VALUE}'", "key_id":"'${KEY_ID}'"}'
       env:
         GH_API_TOKEN: ${{ secrets.GH_API_TOKEN }}
+
+
+
+
+        # # apt install jg -y
+        # # Extract subnet ID from deployment (this depends on your deployment command)
+        # SUBNET_ID="<extracted_subnet_id>"
+
+        # # GitHub API Endpoint to create/update a repository secret | we are setting the subnetID we got in this module as a var for remote repo VM
+        # API_ENDPOINT="https://api.github.com/repos/MKTHEPLUGG/vm/actions/secrets/SUBNET_ID"
+        # PUBLIC_KEY_ENDPOINT="${API_ENDPOINT}/public-key"
+
+        # # Fetch the public key and key_id for encryption
+        # RESPONSE_JSON=$(curl -s -H "Authorization: token ${{ secrets.GH_API_TOKEN }}" $PUBLIC_KEY_ENDPOINT)
+        # PUBLIC_KEY=$(echo $RESPONSE_JSON | jq -r .key)
+        # KEY_ID=$(echo $RESPONSE_JSON | jq -r .key_id)
+
+        # # Save public key to a temporary file
+        # TMP_PUBLIC_KEY_FILE=$(mktemp)
+        # echo "$PUBLIC_KEY" | base64 --decode > $TMP_PUBLIC_KEY_FILE
+        # cat $TMP_PUBLIC_KEY_FILE
+
+        # # Encrypt the SUBNET_ID using the fetched public key
+        # ENCRYPTED_VALUE=$(echo -n "$SUBNET_ID" | openssl pkeyutl -encrypt -pubin -inkey $TMP_PUBLIC_KEY_FILE -pkeyopt rsa_padding_mode:oaep | base64 | tr -d '\n')
+
+        # # Clean up the temporary public key file
+        # rm -f $TMP_PUBLIC_KEY_FILE
+
+        # # Call GitHub API to set the secret
+        # curl -X PUT $API_ENDPOINT \
+        #   -H "Authorization: token ${{ secrets.GH_API_TOKEN }}" \
+        #   -H "Content-Type: application/json" \
+        #   -d '{"encrypted_value":"'${ENCRYPTED_VALUE}'", "key_id":"'${KEY_ID}'"}'
